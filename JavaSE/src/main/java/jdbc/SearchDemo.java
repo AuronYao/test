@@ -1,4 +1,4 @@
-package jdbctest;
+package jdbc;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,21 +7,25 @@ import java.sql.Statement;
 
 import jdbc.DBUtil;
 
-public class Demo1 {
+public class SearchDemo {
     
     public static void main(String[] args) {
         Connection conn = null;
         try{
             conn = DBUtil.getConnection();
-            System.out.println(conn);
-            Statement state = conn.createStatement();
-            
-            ResultSet rs = state.executeQuery("select username,age,salary from emp");
+            String sql = "select name,age,salary from emp where id=?";
+            PreparedStatement state = conn.prepareStatement(sql);
+            state.setString(1, "emp001");
+            ResultSet rs = state.executeQuery();
             while (rs.next()) {
-                String username = rs.getString("username");
+                String name = rs.getString("name");
                 int age = rs.getInt("age");
                 double salary = rs.getDouble("salary");
+                System.out.println("name:" + name);
+                System.out.println("age:" + age);
+                System.out.println("salary:" + salary);
             }
+            
             
         }catch(Exception e){
             e.printStackTrace();
